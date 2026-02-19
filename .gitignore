@@ -1,3 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.venv/
+env/
+*.env
+
+# IDE / OS
 .idea/
-*.iml
-.env
