@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ car.brand.name }} {{ car.model }}</h2>
+    <img src="{{ car.image }}" alt="{{ car.model }}" class="img-fluid mb-3">
+    <p><strong>Year:</strong> {{ car.year }}</p>
+    <p><strong>Price per day:</strong> {{ car.price_per_day }} BGN</p>
+    <p><strong>Features:</strong>
+        {% for feature in car.features.all %}
+            {{ feature.name }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            None
+        {% endfor %}
+    </p>
+    <p>
+        {% if car.is_available %}
+            <span class="badge bg-success">Available</span>
+        {% else %}
+            <span class="badge bg-secondary">Not Available</span>
+        {% endif %}
+    </p>
+
+    <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'cars:car-list' %}" class="btn btn-secondary">Back to list</a>
+{% endblock %}

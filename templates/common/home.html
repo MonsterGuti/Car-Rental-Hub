@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h1>Welcome to Gogulanov-AUTO Car Rental Hub</h1>
+    <p>Your trusted car rental service.</p>
+    <a href="{% url 'cars:car-list' %}" class="btn btn-dark btn-lg mt-3">Browse Cars</a>
+</div>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <h3>Wide Selection</h3>
+        <p>Choose from a variety of cars for every occasion.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Affordable Prices</h3>
+        <p>Competitive rates for daily and weekly rentals.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Easy Offering</h3>
+        <p>Offer your own car in just a few clicks.</p>
+    </div>
+</div>
+
+{% endblock %}
