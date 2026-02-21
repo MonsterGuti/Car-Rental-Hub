@@ -15,7 +15,31 @@
         </span>
     </p>
     <p><strong>Features:</strong> {{ features_list }}</p>
+    <hr>
+    <h4>Customer Reviews</h4>
 
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <strong>{{ review.customer_name }}</strong>
+                    <span class="text-warning">
+                    {{ review.rating }}/5
+                </span>
+                    <p class="mb-1">{{ review.content }}</p>
+                    <small class="text-muted">
+                        {{ review.created_at|date:"d M Y H:i" }}
+                    </small>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
+
+    <a href="{% url 'common:add-review' car.pk %}" class="btn btn-outline-dark mt-2">
+        Leave a Review
+    </a>
     <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-primary">Edit</a>
     <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger">Delete</a>
     <a href="{% url 'cars:car-list' %}" class="btn btn-secondary">Back to list</a>
