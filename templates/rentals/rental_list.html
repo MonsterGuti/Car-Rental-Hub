@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for rental in rentals %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>{{ rental.car.brand.name }} {{ rental.car.model }}</h5>
+                <p><strong>Customer:</strong> {{ rental.customer_name }}</p>
+                <p><strong>Email:</strong> {{ rental.customer_email }}</p>
+                <p><strong>Dates:</strong> {{ rental.start_date }} - {{ rental.end_date }}</p>
+                <p><strong>Total Price:</strong> {{ rental.total_price }} euro</p>
+            </div>
+        </div>
+    {% empty %}
+        <p>No rentals yet.</p>
+    {% endfor %}
+{% endblock %}

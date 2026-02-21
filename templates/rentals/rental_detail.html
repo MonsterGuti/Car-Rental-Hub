@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Rental Details</h2>
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">{{ rental.car.brand.name }} {{ rental.car.model }}</h5>
+            <p><strong>Customer Name:</strong> {{ rental.customer_name }}</p>
+            <p><strong>Customer Email:</strong> {{ rental.customer_email }}</p>
+            <p><strong>Start Date:</strong> {{ rental.start_date|date:"d M Y" }}</p>
+            <p><strong>End Date:</strong> {{ rental.end_date|date:"d M Y" }}</p>
+            <p><strong>Total Price:</strong> {{ rental.total_price }} BGN</p>
+
+            {% if rental.car.is_available %}
+                <span class="badge bg-success">Car Available</span>
+            {% else %}
+                <span class="badge bg-secondary">Car Not Available</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'rentals:rental-update' rental.pk %}" class="btn btn-primary">Edit Rental</a>
+        <a href="{% url 'rentals:rental-delete' rental.pk %}" class="btn btn-danger">Delete Rental</a>
+        <a href="{% url 'rentals:rental-list' %}" class="btn btn-secondary">Back to Rentals</a>
+    </div>
+{% endblock %}
