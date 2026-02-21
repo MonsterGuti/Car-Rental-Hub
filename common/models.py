@@ -1,8 +1,15 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from cars.models import Car
 
 
 class Review(models.Model):
+    car = models.ForeignKey(
+        Car,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
     customer_name = models.CharField(
         max_length=100,
         help_text="Enter the name of the customer leaving the review."
@@ -16,6 +23,7 @@ class Review(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         help_text="Rating must be between 1 and 5."
     )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
