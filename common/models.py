@@ -8,8 +8,6 @@ class Review(models.Model):
         Car,
         on_delete=models.CASCADE,
         related_name='reviews',
-        null=True,
-        blank=True
     )
 
     customer_name = models.CharField(

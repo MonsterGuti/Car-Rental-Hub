@@ -1,39 +1,36 @@
-from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, CreateView
+from django.shortcuts import redirect, get_object_or_404
 from cars.models import Car
-from .models import Review
-from .forms import ReviewForm
-
-def home_view(request):
-    latest_cars = Car.objects.order_by('-id')[:3]
-    reviews = Review.objects.order_by('-created_at')[:3]
-
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = ReviewForm()
-
-    context = {
-        'latest_cars': latest_cars,
-        'reviews': reviews,
-        'form': form,
-    }
-    return render(request, 'common/home.html', context)
+from common.models import Review
+from common.forms import ReviewForm
 
 
-from django.shortcuts import render, redirect
-from .forms import ReviewForm
+class HomeView(TemplateView):
+    template_name = 'common/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_cars'] = Car.objects.order_by('-id')[:3]
+        context['reviews'] = Review.objects.order_by('-created_at')[:3]
+        return context
 
 
-def review_create_view(request):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('car-list')  # или друга подходяща страница
-    else:
-        form = ReviewForm()
+class AddReviewView(CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'common/review-form.html'
 
-    return render(request, 'common/review-form.html', {'form': form})
+    def dispatch(self, request, *args, **kwargs):
+        self.car = get_object_or_404(Car, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        review = form.save(commit=False)
+        review.car = self.car
+        review.save()
+        return redirect('cars:car-detail', pk=self.car.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['car'] = self.car
+        return context

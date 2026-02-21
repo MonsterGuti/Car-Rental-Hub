@@ -18,26 +18,44 @@
     <hr>
     <h4>Customer Reviews</h4>
 
-    {% if reviews %}
-        {% for review in reviews %}
-            <div class="card mb-2">
-                <div class="card-body">
-                    <strong>{{ review.customer_name }}</strong>
-                    <span class="text-warning">
-                    {{ review.rating }}/5
-                </span>
-                    <p class="mb-1">{{ review.content }}</p>
-                    <small class="text-muted">
-                        {{ review.created_at|date:"d M Y H:i" }}
-                    </small>
-                </div>
-            </div>
+{% if average_rating %}
+    <p>
+        Average Rating:
+        {% for i in "12345" %}
+            {% if forloop.counter <= average_rating %}
+                <span class="text-warning">&#9733;</span>
+            {% else %}
+                <span class="text-muted">&#9733;</span>
+            {% endif %}
         {% endfor %}
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
+        ({{ average_rating }}/5)
+    </p>
+{% endif %}
 
-    <a href="{% url 'common:add-review' car.pk %}" class="btn btn-outline-dark mt-2">
+{% if reviews %}
+    {% for review in reviews %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <strong>{{ review.customer_name }}</strong>
+
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        <span class="text-warning">&#9733;</span>
+                    {% else %}
+                        <span class="text-muted">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+
+                <p class="mb-1">{{ review.content }}</p>
+                <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}
+
+    <a href="{% url 'common:add-review' pk=car.pk %}" class="btn btn-outline-dark mt-2">
         Leave a Review
     </a>
     <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-primary">Edit</a>

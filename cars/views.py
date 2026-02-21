@@ -31,7 +31,9 @@ class CarDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         car = self.object
+        reviews = car.reviews.all()
 
+        context['reviews'] = reviews
         context['brand_name'] = car.brand.name
         context['model_name'] = car.model
         context['car_year'] = car.year
@@ -43,6 +45,12 @@ class CarDetailView(DetailView):
 
         features = car.features.all()
         context['features_list'] = ", ".join([f.name for f in features]) if features else "None"
+
+        if reviews.exists():
+            average = sum(r.rating for r in reviews) / reviews.count()
+            context['average_rating'] = round(average, 1)
+        else:
+            context['average_rating'] = None
 
         return context
 

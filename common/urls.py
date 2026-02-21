@@ -1,8 +1,8 @@
 from django.urls import path
-from common.views import home_view, review_create_view
+from common.views import HomeView, AddReviewView
 
 app_name = 'common'
 urlpatterns = [
-    path('', home_view, name='home'),
-    path('review', review_create_view, name='review-create'),
+    path('', HomeView.as_view(), name='home'),
+    path('cars/<int:pk>/review/', AddReviewView.as_view(), name='add-review')
 ]
