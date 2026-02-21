@@ -7,7 +7,9 @@ class Review(models.Model):
     car = models.ForeignKey(
         Car,
         on_delete=models.CASCADE,
-        related_name='reviews'
+        related_name='reviews',
+        null=True,
+        blank=True
     )
 
     customer_name = models.CharField(
