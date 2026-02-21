@@ -7,4 +7,4 @@ from rentals.models import Rental
 class RentalMixin:
     model = Rental
     form_class = RentalForm
-    success_url = reverse_lazy('rentals:rentals-list')
+    success_url = reverse_lazy('rentals:list')

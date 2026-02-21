@@ -1,63 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="text-center mt-5">
-        <h1>Welcome to Gogulanov-AUTO Car Rental Hub</h1>
-        <p>Your trusted car rental service.</p>
-        <a href="{% url 'cars:car-list' %}" class="btn btn-dark btn-lg mt-3">Browse Cars</a>
-    </div>
+<div class="text-center mt-5">
+    <h1>Welcome to Gogulanov-AUTO Car Rental Hub</h1>
+    <p>Your trusted car rental service.</p>
+    <a href="{% url 'cars:car-list' %}" class="btn btn-dark btn-lg mt-3">Browse Cars</a>
+</div>
 
-    <h2 class="mt-5">Latest Cars</h2>
-    <div class="row">
-        {% for car in latest_cars %}
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <img src="{{ car.image }}" class="card-img-top">
-                    <div class="card-body">
-                        <h5>{{ car.brand }} {{ car.model }}</h5>
-                        <p>{{ car.price_per_day }} €/day</p>
-                    </div>
+<h2 class="mt-5">Latest Cars</h2>
+<div class="row">
+    {% for car in latest_cars %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{{ car.image }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                    <p class="card-text">{{ car.price_per_day }} €/day</p>
+                    <a href="{% url 'cars:car-detail' car.pk %}" class="btn btn-primary btn-sm">View Details</a>
                 </div>
             </div>
-        {% empty %}
-            <p>No cars available.</p>
-        {% endfor %}
-    </div>
+        </div>
+    {% empty %}
+        <p>No cars available.</p>
+    {% endfor %}
+</div>
 
-    <h2 class="mt-5">Latest Reviews</h2>
+<div class="text-center my-4">
+    <a href="{% url 'rentals:list' %}" class="btn btn-warning btn-lg">Rented Cars</a>
+</div>
+
+<h2 class="mt-5">Latest Reviews</h2>
+<div class="row">
     {% for review in reviews %}
-        <div class="border p-3 mb-3 rounded shadow-sm">
-            <strong>{{ review.customer_name }}</strong>
-            {% for i in "12345" %}
-                {% if forloop.counter <= review.rating %}
-                    <span class="text-warning">&#9733;</span>
-                {% else %}
-                    <span class="text-muted">&#9733;</span>
-                {% endif %}
-            {% endfor %}
-            <p class="mb-1">{{ review.content }}</p>
-            <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}<br></small>
-            <a href="{% url 'cars:car-detail' review.car.pk %}" class="btn btn-sm btn-primary mt-1">
-                {{ review.car.brand }} {{ review.car.model }}
-            </a>
+        <div class="col-md-4">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <strong>{{ review.customer_name }}</strong>
+                    <span class="text-warning">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                &#9733;
+                            {% else %}
+                                <span class="text-muted">&#9733;</span>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <p class="mb-1">{{ review.content }}</p>
+                    <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
+                    <br>
+                    <a href="{% url 'cars:car-detail' review.car.pk %}" class="btn btn-sm btn-primary mt-2">
+                        {{ review.car.brand }} {{ review.car.model }}
+                    </a>
+                </div>
+            </div>
         </div>
     {% empty %}
         <p>No reviews yet.</p>
     {% endfor %}
+</div>
 
-    <div class="row text-center mt-5">
-        <div class="col-md-4">
-            <h3>Wide Selection</h3>
-            <p>Choose from a variety of cars for every occasion.</p>
-        </div>
-        <div class="col-md-4">
-            <h3>Affordable Prices</h3>
-            <p>Competitive rates for daily and weekly rentals.</p>
-        </div>
-        <div class="col-md-4">
-            <h3>Easy Offering</h3>
-            <p>Offer your own car in just a few clicks.</p>
-        </div>
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <h3>Wide Selection</h3>
+        <p>Choose from a variety of cars for every occasion.</p>
     </div>
-
+    <div class="col-md-4">
+        <h3>Affordable Prices</h3>
+        <p>Competitive rates for daily and weekly rentals.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Easy Offering</h3>
+        <p>Offer your own car in just a few clicks.</p>
+    </div>
+</div>
 {% endblock %}
