@@ -39,6 +39,7 @@ class CarDetailView(DetailView):
         context['image_url'] = car.image
         context['availability'] = "Available" if car.is_available else "Not Available"
         context['availability_class'] = "bg-success" if car.is_available else "bg-secondary"
+        context['reviews'] = car.reviews.all()
 
         features = car.features.all()
         context['features_list'] = ", ".join([f.name for f in features]) if features else "None"
