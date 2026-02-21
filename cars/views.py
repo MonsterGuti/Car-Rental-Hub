@@ -25,6 +25,26 @@ class CarDetailView(DetailView):
     template_name = 'cars/car-detail.html'
     context_object_name = 'car'
 
+    def get_queryset(self):
+        return Car.objects.select_related('brand').prefetch_related('features')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        car = self.object
+
+        context['brand_name'] = car.brand.name
+        context['model_name'] = car.model
+        context['car_year'] = car.year
+        context['price'] = car.price_per_day
+        context['image_url'] = car.image
+        context['availability'] = "Available" if car.is_available else "Not Available"
+        context['availability_class'] = "bg-success" if car.is_available else "bg-secondary"
+
+        features = car.features.all()
+        context['features_list'] = ", ".join([f.name for f in features]) if features else "None"
+
+        return context
+
 
 class CarUpdateView(UpdateView):
     model = Car
