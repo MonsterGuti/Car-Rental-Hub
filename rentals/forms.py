@@ -37,6 +37,6 @@ class RentalForm(forms.ModelForm):
                 car=car,
                 end_date__gte=start,
                 start_date__lte=end
-            ).exists()
+            ).exclude(pk=self.instance.pk).exists()
             if conflict:
                 raise forms.ValidationError(f'This car is already rented from {start} to {end}')

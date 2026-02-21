@@ -8,6 +8,10 @@
                 <p><strong>Email:</strong> {{ rental.customer_email }}</p>
                 <p><strong>Dates:</strong> {{ rental.start_date }} - {{ rental.end_date }}</p>
                 <p><strong>Total Price:</strong> {{ rental.total_price }} euro</p>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'rentals:update' rental.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'rentals:delete' rental.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
             </div>
         </div>
     {% empty %}

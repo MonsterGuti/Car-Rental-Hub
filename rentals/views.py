@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
-from rentals.mixins import RentalMixin
 from rentals.models import Rental
+from rentals.forms import RentalForm
 
 
 class RentalListView(ListView):
@@ -18,22 +18,21 @@ class RentalDetailView(DetailView):
     context_object_name = 'rental'
 
 
-class RentalCreateView(RentalMixin, CreateView):
+class RentalCreateView(CreateView):
+    model = Rental
+    form_class = RentalForm
     template_name = 'rentals/rental_create.html'
-
-    def get_initial(self):
-        initial = super().get_initial()
-        car_id = self.request.GET.get('car')
-        if car_id:
-            initial['car_id'] = car_id
-        return initial
+    success_url = reverse_lazy('rentals:list')
 
 
-class RentalUpdateView(RentalMixin, UpdateView):
+class RentalUpdateView(UpdateView):
+    model = Rental
+    form_class = RentalForm
     template_name = 'rentals/rental_update.html'
+    success_url = reverse_lazy('rentals:list')
 
 
-class RentalDeleteView(RentalMixin, UpdateView):
+class RentalDeleteView(DeleteView):
+    model = Rental
     template_name = 'rentals/rental_delete.html'
-
-
+    success_url = reverse_lazy('rentals:list')
