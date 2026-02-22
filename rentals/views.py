@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+from cars.models import Car
 from rentals.models import Rental
 from rentals.forms import RentalForm
 
@@ -23,6 +24,14 @@ class RentalCreateView(CreateView):
     form_class = RentalForm
     template_name = 'rentals/rental_create.html'
     success_url = reverse_lazy('rentals:list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        car_id = self.request.GET.get('car')
+        if car_id:
+            car_instance = Car.objects.get(pk=car_id)
+            kwargs['car_instance'] = car_instance
+        return kwargs
 
 
 class RentalUpdateView(UpdateView):

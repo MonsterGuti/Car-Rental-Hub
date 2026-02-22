@@ -2,7 +2,15 @@
 {% load custom_filters %}
 
 {% block content %}
-    <h2>{{ brand_name }} {{ model_name }}</h2>
+    <h2>{{ brand_name }} {{ model_name }} {% if car.is_available_now %}
+        <a href="{% url 'rentals:create' %}?car={{ car.pk }}" class="btn btn-success btn-sm mb-1">
+            Book this car
+        </a>
+    {% else %}
+        <button class="btn btn-secondary btn-sm mb-1" disabled>
+            Currently Rented
+        </button>
+    {% endif %}</h2>
 
     <img src="{{ image_url }}" alt="{{ model_name }}" class="img-fluid mb-3">
 
@@ -11,50 +19,52 @@
     <p><strong>Year:</strong> {{ car_year }}</p>
     <p><strong>Price per day:</strong> {{ price|currency }}</p>
     <p><strong>Availability:</strong>
-        <span class="badge {{ availability_class }}">
-            {{ availability }}
-        </span>
+        {% if car.is_available_now %}
+            <span class="badge bg-success">Available Today</span>
+        {% else %}
+            <span class="badge bg-danger">Currently Rented</span>
+        {% endif %}
     </p>
     <p><strong>Features:</strong> {{ features_list }}</p>
     <hr>
     <h4>Customer Reviews</h4>
 
-{% if average_rating %}
-    <p>
-        Average Rating:
-        {% for i in "12345" %}
-            {% if forloop.counter <= average_rating %}
-                <span class="text-warning">&#9733;</span>
-            {% else %}
-                <span class="text-muted">&#9733;</span>
-            {% endif %}
-        {% endfor %}
-        ({{ average_rating }}/5)
-    </p>
-{% endif %}
+    {% if average_rating %}
+        <p>
+            Average Rating:
+            {% for i in "12345" %}
+                {% if forloop.counter <= average_rating %}
+                    <span class="text-warning">&#9733;</span>
+                {% else %}
+                    <span class="text-muted">&#9733;</span>
+                {% endif %}
+            {% endfor %}
+            ({{ average_rating }}/5)
+        </p>
+    {% endif %}
 
-{% if reviews %}
-    {% for review in reviews %}
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-                <strong>{{ review.customer_name }}</strong>
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <strong>{{ review.customer_name }}</strong>
 
-                {% for i in "12345" %}
-                    {% if forloop.counter <= review.rating %}
-                        <span class="text-warning">&#9733;</span>
-                    {% else %}
-                        <span class="text-muted">&#9733;</span>
-                    {% endif %}
-                {% endfor %}
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            <span class="text-warning">&#9733;</span>
+                        {% else %}
+                            <span class="text-muted">&#9733;</span>
+                        {% endif %}
+                    {% endfor %}
 
-                <p class="mb-1">{{ review.content }}</p>
-                <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
+                    <p class="mb-1">{{ review.content }}</p>
+                    <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-{% else %}
-    <p>No reviews yet.</p>
-{% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
 
     <a href="{% url 'common:add-review' pk=car.pk %}" class="btn btn-outline-dark mt-2">
         Leave a Review

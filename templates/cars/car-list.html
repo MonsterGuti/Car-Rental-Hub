@@ -35,20 +35,29 @@
                                 None
                             {% endfor %}
                         </p>
-                        {% if car.is_available %}
+                        {% if car.is_available_now %}
                             <span class="badge bg-success">Available</span>
                         {% else %}
                             <span class="badge bg-secondary">Not Available</span>
                         {% endif %}
                     </div>
+                    <
                     <div class="card-footer text-center">
-                        <a href="{% url 'cars:car-detail' car.pk %}" class="btn btn-info btn-sm mb-1">View
-                            Details</a>
+                        <a href="{% url 'cars:car-detail' car.pk %}" class="btn btn-info btn-sm mb-1">View Details</a>
                         <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-warning btn-sm mb-1">Edit</a>
                         <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger btn-sm mb-1">Delete</a>
-                        <a href="{% url 'common:add-review' pk=car.pk %}" class="btn btn-primary btn-sm mb-1">
-                            Leave a Review
-                        </a>
+                        <a href="{% url 'common:add-review' pk=car.pk %}" class="btn btn-primary btn-sm mb-1">Leave a
+                            Review</a>
+
+                        {% if car.is_available_now %}
+                            <a href="{% url 'rentals:create' %}?car={{ car.pk }}" class="btn btn-success btn-sm mb-1">
+                                Book this car
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary btn-sm mb-1" disabled>
+                                Currently Rented
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

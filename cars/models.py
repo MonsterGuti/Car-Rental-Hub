@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Brand(models.Model):
@@ -24,6 +25,15 @@ class Car(models.Model):
     image = models.URLField()
     is_available = models.BooleanField(default=True)
     features = models.ManyToManyField(Feature, blank=True)
+
+    @property
+    def is_available_now(self):
+        today = timezone.localdate()
+
+        return not self.rental_set.filter(
+            start_date__lte=today,
+            end_date__gte=today
+        ).exists()
 
     def __str__(self):
         return f"{self.brand.name} {self.model} ({self.year})"
