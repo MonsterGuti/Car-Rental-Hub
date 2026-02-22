@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from .models import Car
 from .mixins import CarFilterMixin
-from .forms import CarForm
+from .forms import CarForm, CarDeleteForm
 
 
 class CarListView(CarFilterMixin, ListView):
@@ -68,3 +68,8 @@ class CarDeleteView(DeleteView):
     model = Car
     template_name = 'cars/car-delete.html'
     success_url = reverse_lazy('cars:car-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CarDeleteForm(instance=self.object)
+        return context

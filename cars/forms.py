@@ -53,3 +53,18 @@ class CarForm(forms.ModelForm):
         if price and price <= 0:
             raise forms.ValidationError("Price per day must be positive")
         return price
+
+
+class CarDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = '__all__'
+        widgets = {
+            'brand': forms.Select(attrs={'class':'form-select', 'disabled': True}),
+            'model': forms.TextInput(attrs={'class':'form-control', 'disabled': True}),
+            'year': forms.NumberInput(attrs={'class':'form-control', 'disabled': True}),
+            'price_per_day': forms.NumberInput(attrs={'class':'form-control', 'disabled': True}),
+            'image': forms.URLInput(attrs={'class':'form-control', 'disabled': True}),
+            'is_available': forms.CheckboxInput(attrs={'class':'form-check-input', 'disabled': True}),
+            'features': forms.CheckboxSelectMultiple(attrs={'disabled': True}),
+        }

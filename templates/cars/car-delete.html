@@ -2,8 +2,17 @@
 {% block content %}
 <h2>Delete Car</h2>
 <p>Are you sure you want to delete <strong>{{ object.brand.name }} {{ object.model }}</strong>?</p>
+
 <form method="post">
     {% csrf_token %}
+
+    {% for field in form %}
+        <div class="mb-3">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+    {% endfor %}
+
     <button type="submit" class="btn btn-danger">Yes, delete</button>
     <a href="{% url 'cars:car-detail' object.pk %}" class="btn btn-secondary">Cancel</a>
 </form>
