@@ -15,7 +15,7 @@ class RentalForm(forms.ModelForm):
 
     class Meta:
         model = Rental
-        fields = ['car', 'customer_name', 'customer_email', 'start_date', 'end_date']
+        exclude = ['total_price']
         widgets = {
             'customer_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your name'}),
             'customer_email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),

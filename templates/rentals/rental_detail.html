@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block content %}
     <h2>Rental Details</h2>
@@ -10,7 +11,7 @@
             <p><strong>Customer Email:</strong> {{ rental.customer_email }}</p>
             <p><strong>Start Date:</strong> {{ rental.start_date|date:"d M Y" }}</p>
             <p><strong>End Date:</strong> {{ rental.end_date|date:"d M Y" }}</p>
-            <p><strong>Total Price:</strong> {{ rental.total_price }} BGN</p>
+            <p><strong>Total Price:</strong> {{ rental.total_price|currency }}</p>
 
             {% if rental.car.is_available %}
                 <span class="badge bg-success">Car Available</span>

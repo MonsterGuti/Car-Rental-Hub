@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block content %}
 
@@ -26,7 +27,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ car.brand.name }} {{ car.model }}</h5>
                         <p>Year: {{ car.year }}</p>
-                        <p>Price per day: {{ car.price_per_day }} BGN</p>
+                        <p>Price per day: {{ car.price_per_day|currency }}</p>
                         <p>Features:
                             {% for feature in car.features.all %}
                                 {{ feature.name }}{% if not forloop.last %}, {% endif %}
