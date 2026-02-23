@@ -18,11 +18,37 @@ class Feature(models.Model):
 
 
 class Car(models.Model):
+    SEDAN = 'sedan'
+    SUV = 'suv'
+    HATCHBACK = 'hatchback'
+    COUPE = 'coupe'
+    CABRIOLET = 'cabriolet'
+    MINIVAN = 'minivan'
+    TRUCK = 'truck'
+
+    CAR_TYPE_CHOICES = [
+        (SEDAN, 'Sedan'),
+        (SUV, 'SUV'),
+        (HATCHBACK, 'Hatchback'),
+        (COUPE, 'Coupe'),
+        (CABRIOLET, 'Cabriolet'),
+        (MINIVAN, 'Minivan'),
+        (TRUCK, 'Truck'),
+    ]
+
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     model = models.CharField(max_length=100)
+    car_type = models.CharField(
+        max_length=20,
+        choices=CAR_TYPE_CHOICES,
+        default=SEDAN,
+        verbose_name='Type of Car',
+        null=True,
+        blank=True
+    )
     year = models.PositiveIntegerField()
     price_per_day = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(upload_to='car_images/')
+    image = models.FileField(upload_to='car_images')
     is_available = models.BooleanField(default=True)
     features = models.ManyToManyField(Feature, blank=True)
 

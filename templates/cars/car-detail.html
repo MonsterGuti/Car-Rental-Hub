@@ -15,6 +15,7 @@
 
     <p><strong>Brand:</strong> {{ brand_name }}</p>
     <p><strong>Model:</strong> {{ model_name }}</p>
+    <p><strong>Type:</strong> {{ car.get_car_type_display }}</p>
     <p><strong>Year:</strong> {{ car_year }}</p>
     <p><strong>Price per day:</strong> {{ price|currency }}</p>
     <p><strong>Availability:</strong>

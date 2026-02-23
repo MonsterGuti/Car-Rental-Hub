@@ -18,10 +18,11 @@ class CarFilterForm(forms.Form):
 class CarForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ['brand', 'model', 'year', 'price_per_day', 'image', 'is_available', 'features']
+        fields = '__all__'
         widgets = {
             'brand': forms.Select(attrs={'class': 'form-select'}),
             'model': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car Model'}),
+            'car_type': forms.Select(attrs={'class': 'form-select'}),
             'year': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Year'}),
             'price_per_day': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price per day'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control', 'placeholder': 'Image'}),
