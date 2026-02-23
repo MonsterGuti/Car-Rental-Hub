@@ -24,7 +24,7 @@
         {% for car in cars %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <img src="{{ car.image.url }}" alt="{{ car.model }}" class="img-fluid mb-3">
+                    <img src="{{ car.image.url }}" alt="{{ car.model }}" class="car-image mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{ car.brand.name }} {{ car.model }}</h5>
                         <p>Year: {{ car.year }}</p>
@@ -78,6 +78,7 @@
                     <li class="page-item">
                         <a class="page-link"
                            href="?page=
+
                                    {{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Previous</a>
                     </li>
                 {% endif %}
