@@ -1,16 +1,24 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from .models import Car
-from .mixins import CarFilterMixin
-from .forms import CarForm, CarDeleteForm
+from cars.models import Car
+from cars.mixins import CarFilterMixin
+from cars.forms import CarForm, CarDeleteForm
 
 
 class CarListView(CarFilterMixin, ListView):
     model = Car
     template_name = 'cars/car-list.html'
     context_object_name = 'cars'
-    paginate_by = 6
+    paginate_by = 3
     filter_available_only = False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        querydict = self.request.GET.copy()
+        if 'page' in querydict:
+            querydict.pop('page')
+        context['querystring'] = querydict.urlencode()
+        return context
 
 
 class CarCreateView(CreateView):
