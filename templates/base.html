@@ -23,28 +23,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'common:home' %}">Home</a>
                 </li>
-
+                <li>
+                    <a class="nav-link" href="{% url 'cars:car-list' %}">Cars</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'common:dashboard' %}">Dashboard</a>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="carsDropdown" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Cars
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="carsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'cars:car-list' %}">All Cars</a></li>
-                        <li><a class="dropdown-item" href="{% url 'cars:car-list' %}?available=1">Available Cars</a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-success fw-bold text-center"
-                               href="{% url 'cars:car-create' %}">Add New Car</a></li>
-                    </ul>
-                </li>
+
             </ul>
         </div>
     </div>

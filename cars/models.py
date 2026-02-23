@@ -21,6 +21,7 @@ class Car(models.Model):
     SEDAN = 'sedan'
     SUV = 'suv'
     HATCHBACK = 'hatchback'
+    WAGON = 'wagon'
     COUPE = 'coupe'
     CABRIOLET = 'cabriolet'
     MINIVAN = 'minivan'
@@ -30,6 +31,7 @@ class Car(models.Model):
         (SEDAN, 'Sedan'),
         (SUV, 'SUV'),
         (HATCHBACK, 'Hatchback'),
+        (WAGON, 'Wagon'),
         (COUPE, 'Coupe'),
         (CABRIOLET, 'Cabriolet'),
         (MINIVAN, 'Minivan'),
