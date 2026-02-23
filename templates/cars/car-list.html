@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
+{% load static %}
 
 {% block content %}
 
@@ -23,7 +24,7 @@
         {% for car in cars %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <img src="{{ car.image }}" class="card-img-top" alt="{{ car.model }}">
+                    <img src="{{ car.image.url }}" alt="{{ car.model }}" class="img-fluid mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{ car.brand.name }} {{ car.model }}</h5>
                         <p>Year: {{ car.year }}</p>

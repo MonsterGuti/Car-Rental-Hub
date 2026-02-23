@@ -38,7 +38,7 @@ class CarDetailView(DetailView):
         context['model_name'] = car.model
         context['car_year'] = car.year
         context['price'] = car.price_per_day
-        context['image_url'] = car.image
+        context['image_url'] = car.image.url if car.image else None
         context['availability'] = "Available" if car.is_available else "Not Available"
         context['availability_class'] = "bg-success" if car.is_available else "bg-secondary"
         context['reviews'] = car.reviews.all()

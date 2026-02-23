@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
+{% load static %}
 
 {% block content %}
     <h2>{{ brand_name }} {{ model_name }} {% if car.is_available_now %}
@@ -11,8 +12,6 @@
             Currently Rented
         </button>
     {% endif %}</h2>
-
-    <img src="{{ image_url }}" alt="{{ model_name }}" class="img-fluid mb-3">
 
     <p><strong>Brand:</strong> {{ brand_name }}</p>
     <p><strong>Model:</strong> {{ model_name }}</p>

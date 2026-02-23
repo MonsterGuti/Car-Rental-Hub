@@ -22,7 +22,7 @@ class Car(models.Model):
     model = models.CharField(max_length=100)
     year = models.PositiveIntegerField()
     price_per_day = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.URLField()
+    image = models.ImageField(upload_to='car_images/')
     is_available = models.BooleanField(default=True)
     features = models.ManyToManyField(Feature, blank=True)
 
