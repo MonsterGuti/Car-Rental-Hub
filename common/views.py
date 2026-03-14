@@ -2,7 +2,7 @@ from datetime import date
 
 from django.db.models import Count, Avg
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, ListView
+from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
 from cars.models import Car
 from common.models import Review
@@ -58,6 +58,23 @@ class ReviewListView(ListView):
     context_object_name = 'reviews'
     ordering = ['-created_at']
     paginate_by = 6
+
+
+class EditReviewView(UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = 'common/review-form.html'
+    success_url = reverse_lazy('common:review-list')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['car'].disabled = True
+        return form
+
+class DeleteReviewView(DeleteView):
+    model = Review
+    template_name = 'common/review-confirm-delete.html'
+    success_url = reverse_lazy('common:review-list')
 
 
 class DashboardView(TemplateView):
