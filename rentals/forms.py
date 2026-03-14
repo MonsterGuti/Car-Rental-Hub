@@ -3,6 +3,7 @@ from datetime import date
 from cars.models import Car
 from rentals.models import Rental
 
+
 class RentalForm(forms.ModelForm):
     car = forms.ModelChoiceField(
         queryset=Car.objects.all(),
@@ -13,10 +14,15 @@ class RentalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         car_instance = kwargs.pop('car_instance', None)
         super().__init__(*args, **kwargs)
+
         if car_instance:
             self.fields['car'].queryset = Car.objects.filter(pk=car_instance.pk)
             self.fields['car'].initial = car_instance
             self.fields['car'].disabled = True
+
+        elif self.instance and self.instance.pk:
+            self.fields['car'].disabled = True
+            self.fields['car'].queryset = Car.objects.filter(pk=self.instance.car.pk)
 
     class Meta:
         model = Rental
