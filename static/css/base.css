@@ -1,7 +1,29 @@
+
 .car-image {
     max-width: 300px;
     width: 100%;
     height: auto;
     object-fit: contain;
     border-radius: 8px;
+}
+
+.dropdown-header {
+    font-size: 0.75rem !important; /* !important гарантира, че ще пренапишем Bootstrap */
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding-top: 12px;
+    padding-bottom: 6px;
+    color: #6c757d;
+}
+
+.dropdown-header.text-danger {
+    color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    opacity: 0.1;
 }
