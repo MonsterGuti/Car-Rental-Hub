@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>All Customer Reviews</h1>
+        <a href="{% url 'common:add-review-general' %}" class="btn btn-dark">
+            Leave a Review
+        </a>
+    </div>
+
+    <div class="row">
+        {% for review in reviews %}
+            <div class="col-md-4">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <strong>{{ review.customer_name }}</strong>
+                        <span class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    &#9733;
+                                {% else %}
+                                    <span class="text-muted">&#9733;</span>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <p class="mb-1 mt-2">{{ review.content }}</p>
+                        <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
+                        <br>
+                        <a href="{% url 'cars:car-detail' review.car.pk %}" class="btn btn-sm btn-outline-primary mt-2">
+                            {{ review.car.brand }} {{ review.car.model }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="alert alert-info">No reviews yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

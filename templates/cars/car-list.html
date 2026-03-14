@@ -46,8 +46,7 @@
                         <a href="{% url 'cars:car-detail' car.pk %}" class="btn btn-info btn-sm mb-1">View Details</a>
                         <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-warning btn-sm mb-1">Edit</a>
                         <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger btn-sm mb-1">Delete</a>
-                        <a href="{% url 'common:add-review' pk=car.pk %}" class="btn btn-primary btn-sm mb-1">Leave a
-                            Review</a>
+                        <a href="{% url 'common:add-review' car.pk %}" class="btn btn-primary btn-sm"> Leave Review </a>
 
                         {% if car.is_available_now %}
                             <a href="{% url 'rentals:create' %}?car={{ car.pk }}" class="btn btn-success btn-sm mb-1">
@@ -78,6 +77,7 @@
                     <li class="page-item">
                         <a class="page-link"
                            href="?page=
+
 
                                    {{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Previous</a>
                     </li>

@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from cars.models import Car
+from cars.models import Car, Brand, Feature
 from cars.mixins import CarFilterMixin
-from cars.forms import CarForm, CarDeleteForm
+from cars.forms import CarForm, CarDeleteForm, BrandForm, FeatureForm
 
 
 class CarListView(CarFilterMixin, ListView):
@@ -81,3 +81,67 @@ class CarDeleteView(DeleteView):
         context = super().get_context_data(**kwargs)
         context['form'] = CarDeleteForm(instance=self.object)
         return context
+
+
+class BrandCreateView(CreateView):
+    model = Brand
+    form_class = BrandForm
+    template_name = 'cars/brand_create.html'
+    success_url = reverse_lazy('cars:car-list')
+
+
+class BrandListView(ListView):
+    model = Brand
+    template_name = 'cars/brand_list.html'
+    context_object_name = 'brands'
+
+
+class BrandDetailView(DetailView):
+    model = Brand
+    template_name = 'cars/brand_detail.html'
+    context_object_name = 'brand'
+
+
+class BrandUpdateView(UpdateView):
+    model = Brand
+    form_class = BrandForm
+    template_name = 'cars/brand_update.html'
+    success_url = reverse_lazy('cars:brand-list')
+
+
+class BrandDeleteView(DeleteView):
+    model = Brand
+    template_name = 'cars/brand_delete.html'
+    success_url = reverse_lazy('cars:brand-list')
+
+
+class FeatureCreateView(CreateView):
+    model = Feature
+    form_class = FeatureForm
+    template_name = 'cars/feature_create.html'
+    success_url = reverse_lazy('cars:car-list')
+
+
+class FeatureListView(ListView):
+    model = Feature
+    template_name = 'cars/feature_list.html'
+    context_object_name = 'features'
+
+
+class FeatureDetailView(DetailView):
+    model = Feature
+    template_name = 'cars/feature_detail.html'
+    context_object_name = 'feature'
+
+
+class FeatureUpdateView(UpdateView):
+    model = Feature
+    form_class = FeatureForm
+    template_name = 'cars/feature_update.html'
+    success_url = reverse_lazy('cars:feature-list')
+
+
+class FeatureDeleteView(DeleteView):
+    model = Feature
+    template_name = 'cars/feature_delete.html'
+    success_url = reverse_lazy('cars:feature-list')

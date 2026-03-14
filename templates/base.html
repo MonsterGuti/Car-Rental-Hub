@@ -20,19 +20,88 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'common:home' %}">Home</a>
                 </li>
-                <li>
-                    <a class="nav-link" href="{% url 'cars:car-list' %}">Cars</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Brands
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:brand-list' %}">
+                                All Brands
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:brand-create' %}">
+                                Add Brand
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <a class="nav-link" href="{% url 'rentals:list' %}">Rented cars</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Features
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:feature-list' %}">
+                                All Features
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:feature-create' %}">
+                                Add Feature
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Cars
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:car-list' %}">
+                                All Cars
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'cars:car-create' %}">
+                                Add Car
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Reviews
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'common:review-list' %}">
+                                All Reviews
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'common:add-review-general' %}">
+                                Add Review
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'rentals:list' %}">Rented Cars</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'common:dashboard' %}">Dashboard</a>
                 </li>
-
 
             </ul>
         </div>

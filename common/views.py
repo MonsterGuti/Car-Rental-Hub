@@ -1,7 +1,8 @@
 from datetime import date
 
 from django.db.models import Count, Avg
-from django.views.generic import TemplateView, CreateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, CreateView, ListView
 from django.shortcuts import redirect, get_object_or_404
 from cars.models import Car
 from common.models import Review
@@ -24,20 +25,39 @@ class AddReviewView(CreateView):
     form_class = ReviewForm
     template_name = 'common/review-form.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.car = get_object_or_404(Car, pk=kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
+    def get_initial(self):
+        initial = super().get_initial()
+        car_pk = self.kwargs.get('car_pk')
+        if car_pk:
+            initial['car'] = get_object_or_404(Car, pk=car_pk)
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        car_pk = self.kwargs.get('car_pk')
+        if car_pk:
+            form.fields['car'].disabled = True
+        else:
+            form.fields['car'].disabled = False
+            form.fields['car'].queryset = Car.objects.all()
+        return form
 
     def form_valid(self, form):
-        review = form.save(commit=False)
-        review.car = self.car
-        review.save()
-        return redirect('cars:car-detail', pk=self.car.pk)
+        car_pk = self.kwargs.get('car_pk')
+        if car_pk:
+            form.instance.car = get_object_or_404(Car, pk=car_pk)
+        return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['car'] = self.car
-        return context
+    def get_success_url(self):
+        return reverse_lazy('cars:car-detail', kwargs={'pk': self.object.car.pk})
+
+
+class ReviewListView(ListView):
+    model = Review
+    template_name = 'common/review_list.html'
+    context_object_name = 'reviews'
+    ordering = ['-created_at']
+    paginate_by = 6
 
 
 class DashboardView(TemplateView):

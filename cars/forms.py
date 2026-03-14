@@ -1,5 +1,5 @@
 from django import forms
-from cars.models import Car
+from cars.models import Car, Brand
 
 
 class CarFilterForm(forms.Form):
@@ -68,4 +68,61 @@ class CarDeleteForm(forms.ModelForm):
             'image': forms.URLInput(attrs={'class': 'form-control', 'disabled': True}),
             'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input', 'disabled': True}),
             'features': forms.CheckboxSelectMultiple(attrs={'disabled': True}),
+        }
+
+
+class BrandForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ['name', 'country']
+
+        labels = {
+            'name': 'Brand Name',
+            'country': 'Country of Origin',
+        }
+
+        help_texts = {
+            'name': 'Enter the name of the car brand.',
+        }
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'e.g. BMW',
+                'class': 'form-control'
+            }),
+            'country': forms.TextInput(attrs={
+                'placeholder': 'e.g. Germany',
+                'class': 'form-control'
+            }),
+        }
+
+        error_messages = {
+            'name': {
+                'unique': 'This brand already exists.',
+                'required': 'Please enter a brand name.',
+            },
+            'country': {
+                'required': 'Please enter the country of origin.',
+            },
+        }
+
+
+from django import forms
+from .models import Feature
+
+
+class FeatureForm(forms.ModelForm):
+    class Meta:
+        model = Feature
+        fields = '__all__'
+
+        labels = {
+            'name': 'Feature Name',
+        }
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g. Navigation, Heated Seats'
+            })
         }
