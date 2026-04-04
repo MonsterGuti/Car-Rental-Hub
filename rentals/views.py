@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -28,7 +29,7 @@ class RentalDetailView(DetailView):
     context_object_name = 'rental'
 
 
-class RentalCreateView(CreateView):
+class RentalCreateView(LoginRequiredMixin, CreateView):
     model = Rental
     form_class = RentalForm
     template_name = 'rentals/rental_create.html'
