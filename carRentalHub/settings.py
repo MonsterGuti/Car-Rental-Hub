@@ -134,3 +134,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'cars:car-list'
+LOGOUT_REDIRECT_URL = 'accounts:login'
