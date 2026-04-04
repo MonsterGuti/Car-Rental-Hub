@@ -32,18 +32,30 @@ class RentalForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        car = cleaned_data['car']
+
+        car = cleaned_data.get('car') or self.fields['car'].initial
+
+        if not car:
+            raise forms.ValidationError("Моля, изберете автомобил.")
+
+        cleaned_data['car'] = car
+
         start = cleaned_data.get('start_date')
         end = cleaned_data.get('end_date')
+
         if start and end:
             if end < start:
-                raise forms.ValidationError('End date must be before start date')
+                raise forms.ValidationError('End date must be after start date')
             if start < date.today():
                 raise forms.ValidationError('Start date cannot be in the past')
+
             conflict = Rental.objects.filter(
                 car=car,
                 end_date__gte=start,
                 start_date__lte=end
             ).exclude(pk=self.instance.pk).exists()
+
             if conflict:
-                raise forms.ValidationError(f'This car is already rented from {start} to {end}')
+                raise forms.ValidationError(f'This car is already rented for these dates.')
+
+        return cleaned_data

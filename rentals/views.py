@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -39,21 +40,28 @@ class RentalCreateView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         car_id = self.request.GET.get('car')
         if car_id:
-            car_instance = Car.objects.get(pk=car_id)
-            kwargs['car_instance'] = car_instance
+            self.car_instance = get_object_or_404(Car, pk=car_id)
+            kwargs['car_instance'] = self.car_instance
         return kwargs
 
     def form_valid(self, form):
+        if not form.cleaned_data.get('car') and hasattr(self, 'car_instance'):
+            form.instance.car = self.car_instance
+
         form.instance.user = self.request.user
 
         response = super().form_valid(form)
 
+        print(f"ПРАЩАМ ИЗВЕСТИЕ ЗА: {self.request.user}")
         create_notification_async(
             self.request.user,
             f"Successfully rented {form.instance.car}. Dates: {form.instance.start_date} to {form.instance.end_date}"
         )
-
         return response
+
+    def form_invalid(self, form):
+        print("ГРЕШКИ ВЪВ ФОРМАТА:", form.errors)
+        return super().form_invalid(form)
 
 
 class RentalUpdateView(UpdateView):
