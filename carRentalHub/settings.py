@@ -35,6 +35,7 @@ PROJECT_APPS = [
     'rentals',
     'common',
     'accounts',
+    'notifications'
 ]
 
 INSTALLED_APPS = [

@@ -69,6 +69,32 @@
 
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown px-2">
+                    <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell fs-5"></i>
+                        {% if user.unread_notifications_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                {{ user.unread_notifications_count }}
+                            </span>
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 280px;">
+                        <li><h6 class="dropdown-header">Recent Notifications</h6></li>
+                        {% for n in user.notifications.all|dictsortreversed:"created_at"|slice:":5" %}
+                            <li>
+                                <a class="dropdown-item py-2 border-bottom {% if not n.is_read %}bg-light fw-bold{% endif %}" href="{% url 'notifications' %}">
+                                    <div class="small text-wrap text-dark">{{ n.message }}</div>
+                                    <div class="text-muted small fw-normal" style="font-size: 0.7rem;">{{ n.created_at|timesince }} ago</div>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li class="dropdown-item text-center text-muted py-3">No notifications</li>
+                        {% endfor %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center small text-primary fw-bold" href="{% url 'notifications' %}">See All</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown px-2">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                         {% if user.profile_picture %}
                             <img src="{{ user.profile_picture.url }}" alt="Profile" class="rounded-circle me-2" style="width: 25px; height: 25px; object-fit: cover;">

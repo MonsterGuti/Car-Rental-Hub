@@ -7,7 +7,9 @@ from django.shortcuts import redirect, get_object_or_404
 from cars.models import Car
 from common.models import Review
 from common.forms import ReviewForm
+from notifications.utils import create_notification_async
 from rentals.models import Rental
+
 
 class HomeView(TemplateView):
     template_name = 'common/home.html'
@@ -18,6 +20,7 @@ class HomeView(TemplateView):
         context['reviews'] = Review.objects.order_by('-created_at')[:3]
         return context
 
+
 class AddReviewView(LoginRequiredMixin, CreateView):
     model = Review
     form_class = ReviewForm
@@ -27,7 +30,8 @@ class AddReviewView(LoginRequiredMixin, CreateView):
         initial = super().get_initial()
         car_pk = self.kwargs.get('car_pk')
         if car_pk:
-            initial['car'] = get_object_or_404(Car, pk=car_pk)
+            self.car = get_object_or_404(Car, pk=car_pk)
+            initial['car'] = self.car
         return initial
 
     def get_form(self, form_class=None):
@@ -42,13 +46,23 @@ class AddReviewView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        car_pk = self.kwargs.get('car_pk')
-        if car_pk:
+
+        if not form.instance.car_id:
+            car_pk = self.kwargs.get('car_pk')
             form.instance.car = get_object_or_404(Car, pk=car_pk)
-        return super().form_valid(form)
+
+        response = super().form_valid(form)
+
+        create_notification_async(
+            self.request.user,
+            f"You added a review for {self.object.car.brand} {self.object.car.model}"
+        )
+
+        return response
 
     def get_success_url(self):
         return reverse_lazy('cars:car-detail', kwargs={'pk': self.object.car.pk})
+
 
 class ReviewListView(ListView):
     model = Review
@@ -56,6 +70,7 @@ class ReviewListView(ListView):
     context_object_name = 'reviews'
     ordering = ['-created_at']
     paginate_by = 6
+
 
 class EditReviewView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
@@ -72,6 +87,7 @@ class EditReviewView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.fields['car'].disabled = True
         return form
 
+
 class DeleteReviewView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Review
     template_name = 'common/review-confirm-delete.html'
@@ -80,6 +96,7 @@ class DeleteReviewView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         review = self.get_object()
         return self.request.user == review.user or self.request.user.is_superuser
+
 
 class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = 'common/dashboard.html'

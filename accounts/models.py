@@ -9,5 +9,9 @@ class AppUser(AbstractUser):
 
     is_owner = models.BooleanField(default=False)
 
+    @property
+    def unread_notifications_count(self):
+        return self.notifications.filter(is_read=False).count()
+
     def __str__(self):
         return self.username

@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from cars.models import Car, Brand, Feature
 from cars.mixins import CarFilterMixin
 from cars.forms import CarForm, CarDeleteForm, BrandForm, FeatureForm
+from notifications.utils import create_notification_async
 
 
 class CarListView(CarFilterMixin, ListView):
@@ -32,7 +33,14 @@ class CarCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        create_notification_async(
+            self.request.user,
+            f"You created car {form.instance}"
+        )
+
+        return response
 
 
 class CarDetailView(DetailView):
