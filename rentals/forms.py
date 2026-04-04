@@ -16,13 +16,9 @@ class RentalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if car_instance:
-            self.fields['car'].queryset = Car.objects.filter(pk=car_instance.pk)
             self.fields['car'].initial = car_instance
-            self.fields['car'].disabled = True
-
-        elif self.instance and self.instance.pk:
-            self.fields['car'].disabled = True
-            self.fields['car'].queryset = Car.objects.filter(pk=self.instance.car.pk)
+            self.fields['car'].queryset = Car.objects.filter(pk=car_instance.pk)
+            self.fields['car'].widget.attrs['readonly'] = True
 
     class Meta:
         model = Rental
