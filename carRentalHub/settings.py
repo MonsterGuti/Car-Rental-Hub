@@ -26,8 +26,12 @@ SECRET_KEY = 'django-insecure-lzc7=!#zqz%-=9nj+4ia#4z+b$m)k3lc*!1btr6zp9tk#az02m
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True  # To show my custom 404 page, this should be set to False. But for development purposes, I will keep it True.
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "16.16.140.89",
+    "gator-causal-monthly.ngrok-free.app",
+]
 # Application definition
 
 PROJECT_APPS = [
