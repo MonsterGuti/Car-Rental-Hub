@@ -1,0 +1,40 @@
+.car-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px 8px 0 0;
+    display: block;
+}
+
+.car-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s; /* Бонус: лек ефект при посочване */
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+}
+
+.dropdown-header {
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding-top: 12px;
+    padding-bottom: 6px;
+    color: #6c757d;
+}
+
+.dropdown-header.text-danger {
+    color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    opacity: 0.1;
+}
