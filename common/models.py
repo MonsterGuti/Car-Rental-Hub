@@ -1,9 +1,17 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+from carRentalHub import settings
 from cars.models import Car
 
 
 class Review(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        default=1
+    )
+
     car = models.ForeignKey(
         Car,
         on_delete=models.CASCADE,

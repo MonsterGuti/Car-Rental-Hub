@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: gogulanov-auto_web
+    restart: always
+    command: gunicorn gogulanov-auto.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+    depends_on:
+      - db
+    environment:
+      - DEBUG=0
+      - DATABASE_URL=postgres://postgres:marti123@db:5432/car_rental_hub_db_2
+  db:
+    image: postgres:16
+    container_name: car_rental_hub_db
+    restart: always
+    environment:
+      POSTGRES_DB: car_rental_hub_db_2
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: marti123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  nginx:
+    image: nginx:latest
+    container_name: gogulanov-auto_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+volumes:
+  postgres_data:
+  static_volume:
