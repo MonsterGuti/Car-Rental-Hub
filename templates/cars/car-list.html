@@ -42,10 +42,11 @@
                     <div class="card h-100 shadow-sm border-0 car-card">
                         <div class="position-relative">
                             {% if car.image %}
-                                <img src="{{ car.image.url }}" alt="...">
+                                <img src="{{ car.image.url }}" class="car-image" alt="{{ car.brand.name }} {{ car.model }}">
                             {% else %}
-                                <img src="/static/images/no-car.png" alt="No image">
+                                <img src="{% static 'images/no-car.png' %}" class="car-image" alt="No image">
                             {% endif %}
+
                             <div class="position-absolute top-0 end-0 p-2">
                                 {% if car.is_available_now %}
                                     <span class="badge bg-success shadow-sm">Available</span>
@@ -119,8 +120,7 @@
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                         <li class="page-item">
-                            <a class="page-link shadow-sm" href="?page=
-                                    {{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Previous</a>
+                            <a class="page-link shadow-sm" href="?page={{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Previous</a>
                         </li>
                     {% endif %}
 
@@ -128,8 +128,7 @@
 
                     {% if page_obj.has_next %}
                         <li class="page-item">
-                            <a class="page-link shadow-sm" href="?page=
-                                    {{ page_obj.next_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Next</a>
+                            <a class="page-link shadow-sm" href="?page={{ page_obj.next_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Next</a>
                         </li>
                     {% endif %}
                 </ul>
