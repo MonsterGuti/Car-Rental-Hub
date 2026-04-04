@@ -4,9 +4,11 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>All Customer Reviews</h1>
-        <a href="{% url 'common:add-review-general' %}" class="btn btn-dark">
-            <i class="bi bi-plus-circle"></i> Leave a Review
-        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'common:add-review-general' %}" class="btn btn-dark">
+                <i class="bi bi-plus-circle"></i> Leave a Review
+            </a>
+        {% endif %}
     </div>
 
     <div class="row">
@@ -38,14 +40,16 @@
                                 <i class="bi bi-car-front"></i> {{ review.car.brand }} {{ review.car.model }}
                             </a>
 
-                            <div class="d-flex gap-2">
-                                <a href="{% url 'common:edit-review' review.pk %}" class="btn btn-sm btn-warning flex-fill">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <a href="{% url 'common:delete-review' review.pk %}" class="btn btn-sm btn-danger flex-fill">
-                                    <i class="bi bi-trash"></i> Delete
-                                </a>
-                            </div>
+                            {% if user.is_authenticated and review.user == user or user.is_superuser %}
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'common:edit-review' review.pk %}" class="btn btn-sm btn-warning flex-fill">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <a href="{% url 'common:delete-review' review.pk %}" class="btn btn-sm btn-danger flex-fill">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -7,9 +7,11 @@
                 <h2 class="display-5 fw-bold text-dark">Car Brands</h2>
                 <p class="text-muted">Manage the manufacturers in your car rental catalog.</p>
             </div>
-            <a href="{% url 'cars:brand-create' %}" class="btn btn-primary shadow-sm">
-                <i class="bi bi-plus-circle"></i> Add New Brand
-            </a>
+            {% if user.is_authenticated and user.is_staff or user.is_superuser %}
+                <a href="{% url 'cars:brand-create' %}" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Add New Brand
+                </a>
+            {% endif %}
         </div>
 
         <div class="row">
@@ -40,16 +42,18 @@
                                    class="btn btn-outline-info btn-sm px-3">
                                     <i class="bi bi-info-circle"></i> Details
                                 </a>
-                                <div class="btn-group">
-                                    <a href="{% url 'cars:brand-update' brand.pk %}"
-                                       class="btn btn-light btn-sm text-warning" title="Edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="{% url 'cars:brand-delete' brand.pk %}"
-                                       class="btn btn-light btn-sm text-danger" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
+                                {% if user.is_authenticated and user.is_staff or user.is_superuser %}
+                                    <div class="btn-group">
+                                        <a href="{% url 'cars:brand-update' brand.pk %}"
+                                           class="btn btn-light btn-sm text-warning" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="{% url 'cars:brand-delete' brand.pk %}"
+                                           class="btn btn-light btn-sm text-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

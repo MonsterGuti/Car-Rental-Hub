@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from carRentalHub import settings
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -53,6 +55,11 @@ class Car(models.Model):
     image = models.ImageField(upload_to='car_images')
     is_available = models.BooleanField(default=True)
     features = models.ManyToManyField(Feature, blank=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='cars'
+    )
 
     @property
     def is_available_now(self):

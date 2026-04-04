@@ -1,5 +1,5 @@
 from datetime import date
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.db.models import Count, Avg
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView
@@ -8,7 +8,6 @@ from cars.models import Car
 from common.models import Review
 from common.forms import ReviewForm
 from rentals.models import Rental
-
 
 class HomeView(TemplateView):
     template_name = 'common/home.html'
@@ -19,8 +18,7 @@ class HomeView(TemplateView):
         context['reviews'] = Review.objects.order_by('-created_at')[:3]
         return context
 
-
-class AddReviewView(CreateView):
+class AddReviewView(LoginRequiredMixin, CreateView):
     model = Review
     form_class = ReviewForm
     template_name = 'common/review-form.html'
@@ -43,6 +41,7 @@ class AddReviewView(CreateView):
         return form
 
     def form_valid(self, form):
+        form.instance.user = self.request.user
         car_pk = self.kwargs.get('car_pk')
         if car_pk:
             form.instance.car = get_object_or_404(Car, pk=car_pk)
@@ -51,7 +50,6 @@ class AddReviewView(CreateView):
     def get_success_url(self):
         return reverse_lazy('cars:car-detail', kwargs={'pk': self.object.car.pk})
 
-
 class ReviewListView(ListView):
     model = Review
     template_name = 'common/review_list.html'
@@ -59,26 +57,34 @@ class ReviewListView(ListView):
     ordering = ['-created_at']
     paginate_by = 6
 
-
-class EditReviewView(UpdateView):
+class EditReviewView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = 'common/review-form.html'
     success_url = reverse_lazy('common:review-list')
+
+    def test_func(self):
+        review = self.get_object()
+        return self.request.user == review.user or self.request.user.is_superuser
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['car'].disabled = True
         return form
 
-class DeleteReviewView(DeleteView):
+class DeleteReviewView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Review
     template_name = 'common/review-confirm-delete.html'
     success_url = reverse_lazy('common:review-list')
 
+    def test_func(self):
+        review = self.get_object()
+        return self.request.user == review.user or self.request.user.is_superuser
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = 'common/dashboard.html'
+    permission_required = 'cars.view_car'
+    raise_exception = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

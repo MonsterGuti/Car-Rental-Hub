@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from cars.models import Car, Brand, Feature
@@ -21,11 +22,17 @@ class CarListView(CarFilterMixin, ListView):
         return context
 
 
-class CarCreateView(CreateView):
+class CarCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Car
     form_class = CarForm
     template_name = 'cars/car-create.html'
     success_url = '/cars/'
+    permission_required = 'cars.add_car'
+    raise_exception = True
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 class CarDetailView(DetailView):
@@ -49,7 +56,6 @@ class CarDetailView(DetailView):
         context['image_url'] = car.image.url if car.image else None
         context['availability'] = "Available" if car.is_available else "Not Available"
         context['availability_class'] = "bg-success" if car.is_available else "bg-secondary"
-        context['reviews'] = car.reviews.all()
 
         features = car.features.all()
         context['features_list'] = ", ".join([f.name for f in features]) if features else "None"
@@ -63,19 +69,27 @@ class CarDetailView(DetailView):
         return context
 
 
-class CarUpdateView(UpdateView):
+class CarUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Car
     form_class = CarForm
     template_name = 'cars/car-update.html'
+
+    def test_func(self):
+        car = self.get_object()
+        return car.owner == self.request.user or self.request.user.is_superuser
 
     def get_success_url(self):
         return reverse_lazy('cars:car-detail', kwargs={'pk': self.object.pk})
 
 
-class CarDeleteView(DeleteView):
+class CarDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Car
     template_name = 'cars/car-delete.html'
     success_url = reverse_lazy('cars:car-list')
+
+    def test_func(self):
+        car = self.get_object()
+        return car.owner == self.request.user or self.request.user.is_superuser
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,11 +97,13 @@ class CarDeleteView(DeleteView):
         return context
 
 
-class BrandCreateView(CreateView):
+class BrandCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Brand
     form_class = BrandForm
     template_name = 'cars/brand_create.html'
     success_url = reverse_lazy('cars:car-list')
+    permission_required = 'cars.add_brand'
+    raise_exception = True
 
 
 class BrandListView(ListView):
@@ -102,24 +118,30 @@ class BrandDetailView(DetailView):
     context_object_name = 'brand'
 
 
-class BrandUpdateView(UpdateView):
+class BrandUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'cars/brand_update.html'
     success_url = reverse_lazy('cars:brand-list')
+    permission_required = 'cars.change_brand'
+    raise_exception = True
 
 
-class BrandDeleteView(DeleteView):
+class BrandDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Brand
     template_name = 'cars/brand_delete.html'
     success_url = reverse_lazy('cars:brand-list')
+    permission_required = 'cars.delete_brand'
+    raise_exception = True
 
 
-class FeatureCreateView(CreateView):
+class FeatureCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'cars/feature_create.html'
     success_url = reverse_lazy('cars:car-list')
+    permission_required = 'cars.add_feature'
+    raise_exception = True
 
 
 class FeatureListView(ListView):
@@ -134,14 +156,18 @@ class FeatureDetailView(DetailView):
     context_object_name = 'feature'
 
 
-class FeatureUpdateView(UpdateView):
+class FeatureUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'cars/feature_update.html'
     success_url = reverse_lazy('cars:feature-list')
+    permission_required = 'cars.change_feature'
+    raise_exception = True
 
 
-class FeatureDeleteView(DeleteView):
+class FeatureDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Feature
     template_name = 'cars/feature_delete.html'
     success_url = reverse_lazy('cars:feature-list')
+    permission_required = 'cars.delete_feature'
+    raise_exception = True

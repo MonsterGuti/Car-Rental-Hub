@@ -4,85 +4,123 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h2>{{ brand_name }} {{ model_name }}</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h2>{{ brand_name }} {{ model_name }}</h2>
 
-        {% if car.image %}
-            <div class="car-image-container mb-4">
-                <img src="{{ car.image.url }}" alt="{{ car.model }}" class="img-fluid rounded shadow"
-                     style="max-width: 300px; height: auto;">
+                {% if car.image %}
+                    <div class="car-image-container mb-4">
+                        <img src="{{ car.image.url }}" alt="{{ car.model }}" class="img-fluid rounded shadow"
+                             style="max-width: 500px; height: auto;">
+                    </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    {% if user.is_authenticated %}
+                        {% if car.is_available_now %}
+                            <a href="{% url 'rentals:create' %}?car={{ car.pk }}" class="btn btn-success btn-lg">
+                                Book this car
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                Currently Rented
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary">
+                            Login to book this car
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="car-details bg-light p-4 rounded shadow-sm">
+                    <p><strong>Brand:</strong> {{ brand_name }}</p>
+                    <p><strong>Model:</strong> {{ model_name }}</p>
+                    <p><strong>Type:</strong> {{ car.get_car_type_display }}</p>
+                    <p><strong>Year:</strong> {{ car_year }}</p>
+                    <p><strong>Price per day:</strong> {{ price|currency }}</p>
+                    <p><strong>Availability:</strong>
+                        {% if car.is_available_now %}
+                            <span class="badge bg-success">Available Today</span>
+                        {% else %}
+                            <span class="badge bg-danger">Currently Rented</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Features:</strong> {{ features_list }}</p>
+                    <p><strong>Listed by:</strong> {{ car.owner.username }}</p>
+                </div>
             </div>
-        {% endif %}
+        </div>
 
-        <div class="mb-4">
-            {% if car.is_available_now %}
-                <a href="{% url 'rentals:create' %}?car={{ car.pk }}" class="btn btn-success">
-                    Book this car
-                </a>
+        <hr class="my-5">
+
+        <div class="reviews-section">
+            <h4>Customer Reviews</h4>
+            {% if average_rating %}
+                <p class="h5">
+                    Average Rating:
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= average_rating %}
+                            <span class="text-warning">&#9733;</span>
+                        {% else %}
+                            <span class="text-muted">&#9733;</span>
+                        {% endif %}
+                    {% endfor %}
+                    ({{ average_rating }}/5)
+                </p>
+            {% endif %}
+
+            {% if reviews %}
+                <div class="row mt-3">
+                    {% for review in reviews %}
+                        <div class="col-md-6">
+                            <div class="card mb-3 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ review.user.username|default:review.customer_name }}</strong>
+                                        <small class="text-muted">{{ review.created_at|date:"d M Y" }}</small>
+                                    </div>
+                                    <div class="stars mb-2">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <span class="text-warning">&#9733;</span>
+                                            {% else %}
+                                                <span class="text-muted">&#9733;</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <p class="card-text">{{ review.content }}</p>
+
+                                    {% if user.is_authenticated and review.user == user or user.is_superuser %}
+                                        <div class="mt-2">
+                                            <a href="{% url 'common:edit-review' review.pk %}" class="btn btn-sm btn-link p-0 text-primary me-2">Edit</a>
+                                            <a href="{% url 'common:delete-review' review.pk %}" class="btn btn-sm btn-link p-0 text-danger">Delete</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% else %}
-                <button class="btn btn-secondary" disabled>
-                    Currently Rented
-                </button>
+                <p class="text-muted">No reviews yet. Be the first to review!</p>
             {% endif %}
         </div>
 
-        <div class="car-details">
-            <p><strong>Brand:</strong> {{ brand_name }}</p>
-            <p><strong>Model:</strong> {{ model_name }}</p>
-            <p><strong>Type:</strong> {{ car.get_car_type_display }}</p>
-            <p><strong>Year:</strong> {{ car_year }}</p>
-            <p><strong>Price per day:</strong> {{ price|currency }}</p>
-            <p><strong>Availability:</strong>
-                {% if car.is_available_now %}
-                    <span class="badge bg-success">Available Today</span>
-                {% else %}
-                    <span class="badge bg-danger">Currently Rented</span>
-                {% endif %}
-            </p>
-            <p><strong>Features:</strong> {{ features_list }}</p>
-        </div>
+        <div class="mt-4 mb-5 pt-3 border-top">
+            {% if user.is_authenticated %}
+                <a href="{% url 'common:add-review' car_pk=car.pk %}" class="btn btn-outline-dark me-2">Leave a Review</a>
+            {% endif %}
 
-        <hr>
+            {% if user.is_authenticated and car.owner == user or user.is_superuser %}
+                <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-primary me-2">
+                    <i class="fas fa-edit"></i> Edit Car
+                </a>
+                <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger me-2">
+                    <i class="fas fa-trash"></i> Delete Car
+                </a>
+            {% endif %}
 
-        <h4>Customer Reviews</h4>
-        {% if average_rating %}
-            <p>
-                Average Rating:
-                {% for i in "12345" %}
-                    {% if forloop.counter <= average_rating %}
-                        <span class="text-warning">&#9733;</span>
-                    {% else %}
-                        <span class="text-muted">&#9733;</span>
-                    {% endif %}
-                {% endfor %}
-                ({{ average_rating }}/5)
-            </p>
-        {% endif %}
-
-        {% if reviews %}
-            {% for review in reviews %}
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body">
-                        <strong>{{ review.customer_name }}</strong>
-                        {% for i in "12345" %}
-                            {% if forloop.counter <= review.rating %}
-                                <span class="text-warning">&#9733;</span>
-                            {% else %}
-                                <span class="text-muted">&#9733;</span>
-                            {% endif %}
-                        {% endfor %}
-                        <p class="mb-1">{{ review.content }}</p>
-                        <small class="text-muted">{{ review.created_at|date:"d M Y H:i" }}</small>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews yet.</p>
-        {% endif %}
-
-        <div class="mt-4 mb-5">
-            <a href="{% url 'common:add-review' car_pk=car.pk %}" class="btn btn-outline-dark">Leave a Review</a>
-            <a href="{% url 'cars:car-update' car.pk %}" class="btn btn-primary">Edit</a>
-            <a href="{% url 'cars:car-delete' car.pk %}" class="btn btn-danger">Delete</a>
             <a href="{% url 'cars:car-list' %}" class="btn btn-secondary">Back to list</a>
         </div>
     </div>

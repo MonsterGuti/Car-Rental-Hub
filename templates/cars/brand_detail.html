@@ -7,13 +7,15 @@
 <p><strong>Country:</strong> {{ brand.country }}</p>
 
 <div class="mt-3">
-    <a href="{% url 'cars:brand-update' brand.pk %}" class="btn btn-warning">
-        Edit
-    </a>
+    {% if user.is_authenticated and user.is_staff or user.is_superuser %}
+        <a href="{% url 'cars:brand-update' brand.pk %}" class="btn btn-warning">
+            Edit
+        </a>
 
-    <a href="{% url 'cars:brand-delete' brand.pk %}" class="btn btn-danger">
-        Delete
-    </a>
+        <a href="{% url 'cars:brand-delete' brand.pk %}" class="btn btn-danger">
+            Delete
+        </a>
+    {% endif %}
 
     <a href="{% url 'cars:brand-list' %}" class="btn btn-secondary">
         Back
