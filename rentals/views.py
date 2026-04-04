@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 
 from cars.models import Car
+from notifications.utils import create_notification_async
 from rentals.models import Rental
 from rentals.forms import RentalForm
 
@@ -40,6 +41,18 @@ class RentalCreateView(CreateView):
             car_instance = Car.objects.get(pk=car_id)
             kwargs['car_instance'] = car_instance
         return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        response = super().form_valid(form)
+
+        create_notification_async(
+            self.request.user,
+            f"Successfully rented {form.instance.car}. Dates: {form.instance.start_date} to {form.instance.end_date}"
+        )
+
+        return response
 
 
 class RentalUpdateView(UpdateView):
