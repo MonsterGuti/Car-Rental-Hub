@@ -3,6 +3,7 @@ from cars.models import Car
 from django.core.exceptions import ValidationError
 from datetime import date
 
+
 class Rental(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
@@ -20,7 +21,17 @@ class Rental(models.Model):
     def save(self, *args, **kwargs):
         days = (self.end_date - self.start_date).days + 1
         self.total_price = days * self.car.price_per_day
+
+        if not self.pk:
+            self.car.is_available = False
+            self.car.save()
+
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.car.is_available = True
+        self.car.save()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Rental: {self.car} for {self.customer_name}"
