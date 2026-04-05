@@ -106,7 +106,10 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_cars'] = Car.objects.count()
-        context['available_cars'] = Car.objects.filter(is_available=True).count()
+        context['available_cars'] = Car.objects.exclude(
+            rental__start_date__lte=date.today(),
+            rental__end_date__gte=date.today()
+        ).count()
         context['active_rentals'] = Rental.objects.filter(end_date__gte=date.today()).count()
         context['average_rating'] = Review.objects.aggregate(Avg('rating'))['rating__avg'] or 0
         context['latest_rentals'] = Rental.objects.order_by('-id')[:5]
