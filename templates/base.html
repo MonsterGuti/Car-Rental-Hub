@@ -41,6 +41,10 @@
                         <li><a class="dropdown-item" href="{% url 'cars:brand-list' %}"><i class="bi bi-tags me-2"></i>Brands</a></li>
                         <li><a class="dropdown-item" href="{% url 'cars:feature-list' %}"><i class="bi bi-stars me-2"></i>Features</a></li>
 
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header text-primary"><i class="bi bi-gear me-1"></i> Developer API</h6></li>
+                        <li><a class="dropdown-item" href="/api/cars/"><i class="bi bi-code-slash me-2"></i>Car API (JSON)</a></li>
+
                         {% if user.is_authenticated and user.is_owner or user.is_staff %}
                         <li><hr class="dropdown-divider"></li>
                         <li><h6 class="dropdown-header text-danger"><i class="bi bi-shield-lock me-1"></i> Administration</h6></li>
@@ -145,6 +149,7 @@
         <div class="row align-items-center">
             <div class="col-md-6 text-md-start">
                 <span class="opacity-75">© 2026 Car Rental Hub - Martin Gogulanov</span>
+                <br><small class="opacity-50"><a href="/api/cars/" class="text-white text-decoration-none">REST API Access</a></small>
             </div>
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <a href="#" class="text-white me-3 opacity-75 text-decoration-none"><i class="bi bi-facebook"></i></a>
